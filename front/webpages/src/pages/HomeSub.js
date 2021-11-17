@@ -6,6 +6,13 @@ export const Wrapper = styled.div`
   height: 100%;
   display: flex;
 `;
+
+export const Main = styled.div`
+  width: 100%;
+  height: 100%;
+  display: grid;
+`;
+
 export const Sidebar = styled.div`
   height: 100vh;
   display: flex;
@@ -26,7 +33,9 @@ export const Menu = styled.div`
 export const Header = styled.div`
   display: flex;
   width: 100%;
-  heigth: 30vh;
+  heigth: 50px;
+  margin-top: 0px;
   flex-direction: row;
   background-color: #fffee7;
+  border-bottom: 1px solid #e0e0e0;
 `;

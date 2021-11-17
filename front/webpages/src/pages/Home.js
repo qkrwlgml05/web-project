@@ -1,6 +1,14 @@
-import {Sidebar, Menu, Header, Wrapper} from './HomeSub.js';
-//import React from 'react';
+import {Sidebar, Menu, Header, Wrapper, Main} from './HomeSub.js';
+import React, { useState } from 'react';
 import {Link} from 'react-router-dom';
+
+const Calendar = ({year, month}) => {
+  return (
+    <div className="calendar">
+      <p>{year}</p> <p>{month}</p>
+    </div>
+  );
+};
 
 function Home() {
   const side = [
@@ -8,10 +16,12 @@ function Home() {
     {name: "photo", path: "/photo"},
     {name: "posting", path: "/post"}
   ];
+  var today = new Date();
+  const [yearMonth, setYearMonth] = useState({year: today.getFullYear(), month: today.getMonth()+1});
 
   return (
     <Wrapper>
-      <Sidebar className="sidebar">
+        <Sidebar className="sidebar">
           {side.map((side, index)=>{
             return (
               <Link to={side.path} key={index}>
@@ -21,8 +31,11 @@ function Home() {
               </Link>
             );
           })}
-      </Sidebar>
-      <Header>header</Header>
+        </Sidebar>
+        <Main>
+          <Header className="header">header</Header>
+          <Calendar year={yearMonth.year} month={yearMonth.month} />
+        </Main>
     </Wrapper>
   );
 }
