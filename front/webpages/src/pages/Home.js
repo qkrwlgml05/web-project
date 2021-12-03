@@ -1,7 +1,7 @@
 import {Sidebar, Menu, Header, Wrapper, Main, BodyWrapper, CalendarWrapper, CalendarHeader, CalendarBody, CalendarButton, CalendarWeek, TodoWrapper, TodoDate,
-TodoAdd, TodoListDisplay} from './HomeSub.js';
-import {todoList, addTodo} from './Axois.js';
-import React, { useState } from 'react';
+TodoAdd, TodoListDisplay, DeleteButton} from './Wrapper.js';
+import {todoList, addTodo, checkTodo, deleteTodo} from './Axois.js';
+import React, { useState, useEffect } from 'react';
 import {Link} from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -12,6 +12,13 @@ const Body = () => {
   const [yearMonth, setYearMonth] = useState({year: today.getFullYear(), month: today.getMonth()+1});
   const [todoDate, setTodoDate] = useState({year: today.getFullYear(), month: today.getMonth()+1, date: today.getDate()});
   const [todo, setToDo] = useState({});
+
+  useEffect(()=>{
+    todoList(user_id,String(todoDate.year)+'-'+String(todoDate.month)+'-'+String(todoDate.date))
+    .then(res=>{
+      setToDo(res.data);
+    })
+  },[])
 
   const Calendar = () => {
     const prevLast = new Date(yearMonth.year, yearMonth.month-1, 0);
@@ -64,7 +71,7 @@ const Body = () => {
           [0,1,2,3,4,5].map((week)=>{
             return <CalendarWeek> {
               [0,1,2,3,4,5,6].map((date)=>{
-                return <CalendarButton id={date+week*7-prevLast.getDay()} onClick={(e)=>clickDate(e, currLast.getDate())}> {
+                return <CalendarButton stlye={{visibility:date+week*7-prevLast.getDay() > 0 && date+week*7-prevLast.getDay() <= currLast.getDate()? 'visible' : 'hidden'}} id={date+week*7-prevLast.getDay()} onClick={(e)=>clickDate(e, currLast.getDate())}> {
                     date+week*7-prevLast.getDay() > 0?
                     (date+week*7-prevLast.getDay() <= currLast.getDate()?
                     date+week*7-prevLast.getDay() :
@@ -83,6 +90,7 @@ const Body = () => {
   const TodoList = () => {
     const [addData, setAddData] = useState('');
     const checkboxChecked = true;
+
     const clickAdd = (e) => {
       if (addData !== ''){
         addTodo(user_id,String(todoDate.year)+'-'+String(todoDate.month)+'-'+String(todoDate.date),addData)
@@ -94,6 +102,20 @@ const Body = () => {
       }
     };
 
+    const clickCheckbox = (e, checked) => {
+      checkTodo(user_id,String(todoDate.year)+'-'+String(todoDate.month)+'-'+String(todoDate.date),e.target.id, checked)
+      .then(res=>{
+        setToDo(res.data);
+      })
+    };
+
+    const deleteOnClick = (id) => {
+      deleteTodo(user_id,String(todoDate.year)+'-'+String(todoDate.month)+'-'+String(todoDate.date), id)
+      .then(res=>{
+        setToDo(res.data);
+      })
+    };
+
     return (
       <TodoWrapper>
         <div className="todo">todo list</div>
@@ -101,20 +123,20 @@ const Body = () => {
           {todoDate.year}-{todoDate.month}-{todoDate.date}
         </TodoDate>
         <TodoAdd>
-          <input id="todoInput" value={addData} onChange={(e)=>{setAddData(e.target.value)}}/>
+          <input id="todoInput" value={addData} onChange={(e)=>setAddData(e.target.value)}/>
           <button onClick={clickAdd}>추가</button>
         </TodoAdd>
         <TodoListDisplay>
           {
-            todo.unchecked && todo.unchecked.map((unchecked)=>{
-              return <div><input type="checkbox"/>{unchecked} <button>삭제</button></div>
+            todo.unchecked && todo.unchecked.map((unchecked, index)=>{
+              return <div><input id={todo.unchecked_id[index]} type="checkbox" onClick={(e)=>clickCheckbox(e,false)}/> {unchecked} <DeleteButton onClick={()=>deleteOnClick(todo.unchecked_id[index])}>x</DeleteButton></div>
             })
           }
         </TodoListDisplay>
         <TodoListDisplay>
           {
-            todo.checked && todo.checked.map((checked)=>{
-              return <div><input type="checkbox" checked={checkboxChecked}/>{checked} <button>삭제</button></div>
+            todo.checked && todo.checked.map((checked, index)=>{
+              return <div><input id={todo.checked_id[index]} type="checkbox" checked={checkboxChecked} onClick={(e)=>clickCheckbox(e,true)}/>{checked} <DeleteButton onClick={()=>deleteOnClick(todo.checked_id[index])}>x</DeleteButton></div>
             })
           }
         </TodoListDisplay>
@@ -124,14 +146,15 @@ const Body = () => {
 
   return (
     <BodyWrapper className="body">
-      <Calendar /><TodoList />
+      <Calendar />
+      <TodoList />
     </BodyWrapper>
   );
 };
 
 function Home() {
   const side = [
-    {name: "menu1", path: "/menu1"},
+    {name: "일기", path: "/diary"},
     {name: "menu2", path: "/menu2"},
     {name: "menu3", path: "/menu3"}
   ];

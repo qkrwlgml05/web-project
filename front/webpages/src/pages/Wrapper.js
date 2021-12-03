@@ -122,3 +122,23 @@ export const TodoListDisplay = styled.div`
   padding: 1%;
   border: 1px solid #d0d0d0;
 `;
+
+export const DeleteButton = styled.button`
+  background-color: rgba( 0,0,0,0);
+  border: 0px;
+`;
+
+export const DiaryBody = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 94%;
+  height: 60vh;
+  border: 1px solid #d0d0d0;
+  margin: 3%;
+`;
+
+export const DiaryHeader = styled.div`
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+`;
