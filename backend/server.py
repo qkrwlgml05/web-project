@@ -98,7 +98,7 @@ def gettitles():
 
     data = pd.read_sql("SELECT * FROM homepage.diary WHERE user_id='{0}'".format(user_id), conn)
     if len(data) > 0:
-        date = list(data.date.values)
+        date = [str(i) for i in data.date.values]
         title = list(data.title.values)
         post_id = [int(i) for i in data.post_id.values]
     else:

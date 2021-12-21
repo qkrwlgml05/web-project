@@ -8,6 +8,7 @@ const user_id = 'aaa';
 
 const Body = () => {
   const [postTitles, setPostTitles] = useState({});
+  const [btnClicked, setBtnClicked] = useState(0); // 0 : default 1: writing 2: modifying
 
   useEffect(()=>{
     getDiaryTitles(user_id)
@@ -17,15 +18,32 @@ const Body = () => {
   }, [])
 
   return <DiaryBody>
-    <CalendarHeader>
-    <div>제목 | 날짜</div>
-      <button> 글쓰기 </button>
-      <button> 수정 </button>
-    </CalendarHeader>
-    {postTitles.title && postTitles.title.map((title, index)=>{
-        return <div>{title}|{postTitles.date[index]}</div>
-      })
-    }
+  <DiaryHeader>
+    <button onClick={(e)=>setBtnClicked(btnClicked===0?1:0)}> {btnClicked===0?'글쓰기':'취소'} </button>
+    <button> 수정 </button>
+  </DiaryHeader>
+  {
+    btnClicked===0 || btnClicked===2?<table>
+    <thead>
+      <tr>
+        <th style={{width:"10%"}}>번호</th>
+        <th style={{width:"75%"}}>제목</th>
+        <th style={{width:"15%"}}>날짜</th>
+      </tr>
+    </thead>
+    <tbody>
+        {postTitles.title && postTitles.title.map((title, index)=>{
+            return <tr>
+            <td style={{width:"10%"}}>{index+1}</td>
+            <td style={{width:"75%"}}><Link to={window.location.pathname+'/'+postTitles.post_id[index]} key={postTitles.post_id[index]}>{title}</Link></td>
+            <td style={{width:"15%"}}>{postTitles.date[index]}</td>
+            </tr>
+          })
+        }
+    </tbody>
+    </table>
+    :<DiaryBody style={{border:"0px", width:"90%"}}><input type='text' id='title'/><input style={{height:'40vh', textAlignVertical:"top"}} type='text' id='content'/></DiaryBody>
+  }
   </DiaryBody>
 };
 
