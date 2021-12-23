@@ -3,7 +3,7 @@ from flask import *
 from flask_cors import CORS
 import psycopg2 as pg2
 import pandas as pd
-from datetime import timedelta
+from datetime import date
 
 app = Flask(__name__)
 cors = CORS(app, origin='http://127.0.0.1:3000', supports_credentials=True)
@@ -106,6 +106,28 @@ def gettitles():
         title = []
         post_id = []
     return jsonify(user_id=user_id, date=date, title=title, post_id=post_id)
+
+@app.route('/diary/write', methods=['POST', 'GET'])
+def writediary():
+    req = request.get_json()
+    user_id = req['user_id']
+    title = req['title']
+    content = req['content']
+
+    cur.execute("INSERT INTO homepage.diary (user_id, date, title) VALUES ('{0}', '{1}', '{2}')".format(user_id, str(date.today()), title))
+    data = pd.read_sql("SELECT * FROM homepage.diary WHERE user_id='{0}'".format(user_id), conn)
+    post_id = data['post_id'].values.max()
+    cur.execute("INSERT INTO homepage.diary_content (user_id, post_id, content) VALUES ('{0}', {1}, '{2}')".format(user_id, post_id, content))
+    conn.commit()
+    if len(data) > 0:
+        dateval = [str(i) for i in data.date.values]
+        title = list(data.title.values)
+        post_id = [int(i) for i in data.post_id.values]
+    else:
+        dateval = []
+        title = []
+        post_id = []
+    return jsonify(user_id=user_id, date=dateval, title=title, post_id=post_id)
 
 if __name__ == '__main__':
 	app.run(port=5000)

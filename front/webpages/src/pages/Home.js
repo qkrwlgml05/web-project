@@ -1,6 +1,6 @@
 import {Sidebar, Menu, Header, Wrapper, Main, BodyWrapper, CalendarWrapper, CalendarHeader, CalendarBody, CalendarButton, CalendarWeek, TodoWrapper, TodoDate,
 TodoAdd, TodoListDisplay, DeleteButton} from './Wrapper.js';
-import {todoList, addTodo, checkTodo, deleteTodo} from './Axois.js';
+import {todoList, addTodo, checkTodo, deleteTodo} from './Axios.js';
 import React, { useState, useEffect } from 'react';
 import {Link} from 'react-router-dom';
 import styled from 'styled-components';

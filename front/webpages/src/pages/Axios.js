@@ -74,3 +74,18 @@ export const getDiaryTitles = (id) => {
     credentials: 'include'
   })
 };
+
+export const writeDiary = (id, title, content) => {
+  return axios({
+    url: server+'/diary/write',
+    method: 'post',
+    data: {
+      user_id: id,
+      title: title,
+      content: content
+    },
+    responseType: 'json',
+    withCredentials: true,
+    credentials: 'include'
+  })
+};

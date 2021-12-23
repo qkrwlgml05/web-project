@@ -1,5 +1,5 @@
 import {Sidebar, Menu, Header, Wrapper, Main, DiaryBody, DiaryHeader, CalendarHeader} from './Wrapper.js';
-import {getDiaryTitles} from './Axois.js';
+import {getDiaryTitles, writeDiary} from './Axios.js';
 import React, { useState, useEffect } from 'react';
 import {Link} from 'react-router-dom';
 import styled from 'styled-components';
@@ -8,6 +8,8 @@ const user_id = 'aaa';
 
 const Body = () => {
   const [postTitles, setPostTitles] = useState({});
+  const [wrtTitle, setWrtTitle] = useState("");
+  const [wrtContent, setWrtContent] = useState("");
   const [btnClicked, setBtnClicked] = useState(0); // 0 : default 1: writing 2: modifying
 
   useEffect(()=>{
@@ -15,12 +17,30 @@ const Body = () => {
     .then(res=>{
       setPostTitles(res.data);
     })
-  }, [])
+  }, []);
+
+  const clickModify = (e) => {
+    if (btnClicked===0){
+      setBtnClicked(2);
+    }else if (btnClicked===1){ // 수정 상태
+      setBtnClicked(0);
+      // 글 내용 백엔드로 전송
+      writeDiary(user_id, wrtTitle, wrtContent)
+      .then(res=>{
+        setPostTitles(res.data);
+        setWrtTitle("");
+        setWrtContent("");
+      })
+    }else if (btnClicked===2){
+      setBtnClicked(0);
+      // check된 게시물 수정
+    }
+  };
 
   return <DiaryBody>
   <DiaryHeader>
     <button onClick={(e)=>setBtnClicked(btnClicked===0?1:0)}> {btnClicked===0?'글쓰기':'취소'} </button>
-    <button> 수정 </button>
+    <button onClick={clickModify}> 수정 </button>
   </DiaryHeader>
   {
     btnClicked===0 || btnClicked===2?<table>
@@ -42,7 +62,10 @@ const Body = () => {
         }
     </tbody>
     </table>
-    :<DiaryBody style={{border:"0px", width:"90%"}}><input type='text' id='title'/><input style={{height:'40vh', textAlignVertical:"top"}} type='text' id='content'/></DiaryBody>
+    :<DiaryBody style={{border:"0px", width:"90%"}}>
+      <input value={wrtTitle} onChange={(e)=>setWrtTitle(e.target.value)} type='text' id='title'/>
+      <input value={wrtContent} onChange={(e)=>setWrtContent(e.target.value)} style={{height:'40vh', textAlignVertical:"top"}} type='text' id='content'/>
+      </DiaryBody>
   }
   </DiaryBody>
 };
