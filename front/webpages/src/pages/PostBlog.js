@@ -27,7 +27,7 @@ const Body = () => {
     }else{
       setDeleteList([...deleteList, index]);
     }
-  }
+  };
 
   const clickModify = (e) => {
     if (btnClicked===0){
