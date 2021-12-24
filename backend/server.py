@@ -107,6 +107,16 @@ def gettitles():
         post_id = []
     return jsonify(user_id=user_id, date=date, title=title, post_id=post_id)
 
+@app.route('/diary/<post_id>', methods=['POST', 'GET'])
+def gettitles(post_id):
+    req = request.get_json()
+    user_id = req['user_id']
+
+    data = pd.read_sql("SELECT post_id, content FROM homepage.diary_content WHERE user_id='{0}' and post_id={1}".format(user_id, post_id), conn)
+    content = list(data.content.values)
+    post_id = [int(i) for i in data.post_id.values]
+    return jsonify(user_id=user_id, content=content, post_id=post_id)
+
 @app.route('/diary/write', methods=['POST', 'GET'])
 def writediary():
     req = request.get_json()
@@ -119,6 +129,31 @@ def writediary():
     post_id = data['post_id'].values.max()
     cur.execute("INSERT INTO homepage.diary_content (user_id, post_id, content) VALUES ('{0}', {1}, '{2}')".format(user_id, post_id, content))
     conn.commit()
+    if len(data) > 0:
+        dateval = [str(i) for i in data.date.values]
+        title = list(data.title.values)
+        post_id = [int(i) for i in data.post_id.values]
+    else:
+        dateval = []
+        title = []
+        post_id = []
+    return jsonify(user_id=user_id, date=dateval, title=title, post_id=post_id)
+
+@app.route('/diary/delete', methods=['POST', 'GET'])
+def deletediary():
+    req = request.get_json()
+    user_id = req['user_id']
+    post_ids = req['post_ids']
+
+    exestr = "WHERE user_id='{}' and post_id in (".format(user_id)
+    exestr += str(post_ids[0])
+    for id in post_ids[1:]: exestr += ",{}".format(id)
+    exestr+=")"
+
+    cur.execute("DELETE FROM homepage.diary_content "+exestr)
+    cur.execute("DELETE FROM homepage.diary "+exestr)
+    conn.commit()
+    data = pd.read_sql("SELECT * FROM homepage.diary WHERE user_id='{0}'".format(user_id), conn)
     if len(data) > 0:
         dateval = [str(i) for i in data.date.values]
         title = list(data.title.values)

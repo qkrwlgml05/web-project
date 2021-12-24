@@ -1,4 +1,5 @@
 import axios         from 'axios';
+import { atom } from 'recoil';
 
 const server = 'http://127.0.0.1:5000';
 
@@ -89,3 +90,22 @@ export const writeDiary = (id, title, content) => {
     credentials: 'include'
   })
 };
+
+export const deleteDiary = (id, post_ids) => {
+  return axios({
+    url: server+'/diary/delete',
+    method: 'post',
+    data: {
+      user_id: id,
+      post_ids: post_ids
+    },
+    responseType: 'json',
+    withCredentials: true,
+    credentials: 'include'
+  })
+};
+
+export const postval = atom({
+    key: 'diary',
+    default: {title:"", content:""}
+});
