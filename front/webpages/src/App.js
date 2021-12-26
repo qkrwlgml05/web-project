@@ -4,6 +4,7 @@ import {BrowserRouter, Switch, Route} from "react-router-dom";
 
 const HomeScreen = lazy(() => import('./pages/Home.js'));
 const BlogScreen = lazy(() => import('./pages/Blog.js'));
+const PostScreen = lazy(() => import('./pages/PostBlog.js'));
 
 function App() {
   return (
@@ -12,7 +13,7 @@ function App() {
         <Switch>
           <Route exact path="/" component={HomeScreen} />
           <Route exact path="/diary" component={BlogScreen} />
-          <Route exact path="/diary/:id" component={BlogScreen} />
+          <Route exact path="/diary/:id" component={PostScreen} />
         </Switch>
       </Suspense>
     </BrowserRouter>
