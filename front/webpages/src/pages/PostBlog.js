@@ -7,7 +7,7 @@ import styled from 'styled-components';
 
 const user_id = 'aaa';
 
-const PostBody = () => {
+const Body = ({post_id}) => {
   const [wrtPost, setWrtPost] = useRecoilState(postval);
   const [btnClicked, setBtnClicked] = useState(0); // 0 : default 1: modifying
 
@@ -27,7 +27,9 @@ const PostBody = () => {
     }
   };
 
-  const
+  const deleteBtn(user_id){
+
+  }
 
   return <DiaryBody>
     {btnClicked===0?
@@ -42,7 +44,7 @@ const PostBody = () => {
   </DiaryBody>
 };
 
-function Blog() {
+function PostBlog({post_id}) {
   const side = [
     {name: "일기", path: "/diary"},
     {name: "menu2", path: "/menu2"},
@@ -62,10 +64,10 @@ function Blog() {
         </Sidebar>
         <Main>
           <Header className="header"><h2>Header</h2></Header>
-          <Body />
+          <Body post_id = {post_id}/>
         </Main>
     </Wrapper>
   );
 }
 
-export default PostBody;
+export default PostBlog;
