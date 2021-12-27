@@ -1,5 +1,5 @@
 import {Sidebar, Menu, Header, Wrapper, Main, DiaryBody, DiaryHeader, CalendarHeader} from './Wrapper.js';
-import {postval, getPost} from './Axios.js';
+import {postval, getPost, deleteDiary} from './Axios.js';
 import React, { useState, useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import {Link} from 'react-router-dom';
@@ -27,18 +27,30 @@ const Body = ({post_id}) => {
     }
   };
 
-  const deleteBtn(user_id){
-
+  const deleteBtn = (user_id) => {
+    if (window.confirm("삭제하시겠습니까?")){
+      deleteDiary(user_id, [post_id])
+      .then(res=>{
+        history.push("/diary"); // 원래 글 리스트 url로 이동
+      })
+    }
   }
 
   return <DiaryBody>
     {btnClicked===0?
       <DiaryHeader>
+        <h2> {wrtPost.title} </h2>
+        // 날짜 작게 추가하기
         <button onClick={()=>deleteBtn()}> 삭제 </button>
+        // 본문 추가
+        <button onClick={()=>setBtnClicked(1)}> 수정 </button>
+        <button onClick={()=>history.push("/diary")}> 목록 </button> // 원래 글 리스트 url로 이동
       </DiaryHeader>
     :<DiaryBody style={{border:"0px", width:"90%"}}>
       <input value={wrtPost.title} onChange={(e)=>setWrtPost({...wrtPost, title:e.target.value})} type='text' id='title'/>
       <input value={wrtPost.content} onChange={(e)=>setWrtPost({...wrtPost, content:e.target.value})} style={{height:'40vh', textAlignVertical:"top"}} type='text' id='content'/>
+      <button> 저장 </button> // 저장하는 부분
+      <button onClick={()=>setBtnClicked(0)}> 취소 </button>
     </DiaryBody>
   }
   </DiaryBody>

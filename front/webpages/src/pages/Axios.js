@@ -120,5 +120,5 @@ export const getPost = (id, post_ids) => {
 
 export const postval = atom({
     key: 'diary',
-    default: {title:"", content:""}
+    default: {title:"", content:"", date:""}
 });
