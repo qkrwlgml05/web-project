@@ -73,7 +73,7 @@ const Body = () => {
         {postTitles.title && postTitles.title.map((title, index)=>{
             return <tr>
             <td style={{width:"10%"}}>{btnClicked===0?index+1:<input type='checkbox' onChange={()=>onDeleteList(postTitles.post_id[index])}/>}</td>
-            <td style={{width:"75%"}}><Link to={window.location.pathname+'/'+postTitles.post_id[index]} key={postTitles.post_id[index]}>{title}</Link></td>
+            <td style={{width:"75%"}}><Link to={window.location.pathname+'/'+postTitles.post_id[index]} onClick={()=>setWrtPost({title:postTitles.titles[index], content:"", date:postTitles.date[index]})} key={postTitles.post_id[index]}>{title}</Link></td>
             <td style={{width:"15%"}}>{postTitles.date[index]}</td>
             </tr>
           })

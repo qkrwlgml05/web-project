@@ -14,7 +14,7 @@ const Body = ({post_id}) => {
   useEffect(()=>{
     getPost(user_id)
     .then(res=>{
-      setWrtPost({title:res.data.title, content:res.data.content});
+      setWrtPost({...wrtPost, title:res.data.title, content:res.data.content});
     })
   }, []);
 
