@@ -108,7 +108,7 @@ def gettitles():
     return jsonify(user_id=user_id, date=date, title=title, post_id=post_id)
 
 @app.route('/diary/<post_id>', methods=['POST', 'GET'])
-def gettitles(post_id):
+def getpost(post_id):
     req = request.get_json()
     user_id = req['user_id']
 

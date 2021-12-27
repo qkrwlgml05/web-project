@@ -105,6 +105,19 @@ export const deleteDiary = (id, post_ids) => {
   })
 };
 
+export const getPost = (id, post_ids) => {
+  return axios({
+    url: server+'/diary/'+post_ids,
+    method: 'post',
+    data: {
+      user_id: id
+    },
+    responseType: 'json',
+    withCredentials: true,
+    credentials: 'include'
+  })
+};
+
 export const postval = atom({
     key: 'diary',
     default: {title:"", content:""}
